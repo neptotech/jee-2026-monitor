@@ -3,7 +3,7 @@ const crypto = require("crypto");
 
 // ── Shared cache – persists across warm Vercel invocations ──
 // All users share this single cached result, so NTA gets hit only once per cycle
-const TARGET_URL = "https://stackoverflow.com/questions?tab=Newest";
+const TARGET_URL = "https://jeemain.nta.nic.in/";
 const CACHE_TTL = 15_000; // Re-fetch from NTA at most once every 15 seconds
 
 let cache = {
