@@ -97,11 +97,9 @@
 
     /* ─── CONTROLS ─── */
     .controls { display:flex; gap:.65rem; flex-wrap:wrap; align-items:center; }
-    .interval-group { display:flex; align-items:center; gap:.4rem; }
-    .interval-input { width:60px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:.55rem .5rem;
-      color:var(--text); font-size:.85rem; font-family:'Inter',sans-serif; outline:none; text-align:center; transition:border-color .25s; }
-    .interval-input:focus { border-color:var(--accent); }
-    .interval-label { color:var(--muted); font-size:.78rem; white-space:nowrap; }
+    .poll-tag { display:inline-flex; align-items:center; gap:.35rem; padding:.35rem .75rem; border-radius:8px;
+      background:var(--surface2); border:1px solid var(--border); font-size:.75rem; color:var(--muted); font-weight:500; }
+    .poll-tag strong { color:var(--text); }
 
     .btn { display:inline-flex; align-items:center; gap:.45rem; padding:.6rem 1.2rem; border:none; border-radius:10px;
       font-family:'Inter',sans-serif; font-size:.82rem; font-weight:600; cursor:pointer; transition:all .2s; white-space:nowrap; }
@@ -234,11 +232,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
           Stop
         </button>
-        <div class="interval-group">
-          <span class="interval-label">Poll every</span>
-          <input class="interval-input" id="intervalInput" type="number" value="20" min="10" max="120" />
-          <span class="interval-label">sec</span>
-        </div>
+        <div class="poll-tag">🔄 Every <strong>15s</strong></div>
         <div class="progress-wrap" id="progressWrap" style="visibility:hidden;">
           <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
           <div class="progress-text" id="progressText">Next poll in --s</div>
@@ -400,9 +394,10 @@
       }
     }
 
+    const POLL_INTERVAL = 15; // fixed 15s — synced with server cache TTL
+
     function startMonitoring() {
       if (monitoring) return;
-      const interval = Math.max(10, parseInt(document.getElementById("intervalInput").value) || 20);
       monitoring = true;
       previousHash = null;
       changeAlerted = false;
@@ -413,15 +408,14 @@
       document.getElementById("statErrors").textContent = 0;
       document.getElementById("btnStart").disabled = true;
       document.getElementById("btnStop").disabled = false;
-      document.getElementById("intervalInput").disabled = true;
       document.getElementById("progressWrap").style.visibility = "visible";
       document.getElementById("liveBadge").style.display = "inline-flex";
       document.getElementById("statusHero").classList.add("active");
       updateStatus("running");
-      addLog(`Monitoring started — polling server every ${interval}s`, "info");
+      addLog(`Monitoring started — polling every ${POLL_INTERVAL}s (synced with server cache)`, "info");
       pollServer();
-      timer = setInterval(pollServer, interval * 1000);
-      startCountdown(interval);
+      timer = setInterval(pollServer, POLL_INTERVAL * 1000);
+      startCountdown(POLL_INTERVAL);
       uptimeTimer = setInterval(updateUptime, 1000);
     }
 
@@ -430,7 +424,6 @@
       clearInterval(timer); clearInterval(countdownTimer); clearInterval(uptimeTimer); timer = null;
       document.getElementById("btnStart").disabled = false;
       document.getElementById("btnStop").disabled = true;
-      document.getElementById("intervalInput").disabled = false;
       document.getElementById("progressWrap").style.visibility = "hidden";
       document.getElementById("liveBadge").style.display = "none";
       document.getElementById("statusHero").classList.remove("active");
