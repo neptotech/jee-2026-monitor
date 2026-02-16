@@ -186,8 +186,17 @@
     .sticky-credit svg { width:16px; height:16px; fill:currentColor; }
 
     /* ─── NOTE TEXT ─── */
-    .note-text { text-align:center; font-size:.78rem; color:var(--muted); margin-bottom:1rem; line-height:1.6; }
+    .note-text { text-align:center; font-size:.78rem; color:var(--muted); margin-bottom:.75rem; line-height:1.6; }
     .note-text strong { color:var(--text); font-weight:600; }
+
+    .motivation-banner {
+      text-align:center; padding:1rem 1.25rem; border-radius:12px; margin-bottom:1rem;
+      background:linear-gradient(135deg, rgba(34,197,94,.06), rgba(6,182,212,.06));
+      border:1px solid rgba(34,197,94,.15);
+    }
+    .motivation-banner .emoji { font-size:1.3rem; }
+    .motivation-banner p { font-size:.82rem; color:var(--muted); line-height:1.55; margin-top:.3rem; }
+    .motivation-banner strong { color:var(--green); font-weight:700; }
 
     @media (max-width:600px) {
       .container { padding:1.2rem 1rem 3rem; }
@@ -210,6 +219,11 @@
     </header>
 
     <p class="note-text">📢 This tool monitors <strong>any content change</strong> on <a href="https://jeemain.nta.nic.in/" target="_blank" style="color:var(--accent2)">jeemain.nta.nic.in</a> — not just results, but <strong>any new update, notification, or announcement</strong> posted on the page.</p>
+
+    <div class="motivation-banner">
+      <span class="emoji">📚</span>
+      <p><strong>Focus on your Board exams — we’ll handle the rest!</strong><br>Keep this tab open in the background and study in peace. The moment anything changes on the JEE Main website, we’ll alert you with sound &amp; notification. No need to keep refreshing manually.</p>
+    </div>
 
     <!-- Status -->
     <div class="status-hero" id="statusHero">
