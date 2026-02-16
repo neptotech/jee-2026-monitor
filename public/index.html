@@ -223,17 +223,18 @@
 
     <p class="note-text">📢 This tool monitors <strong>any content change</strong> on <a href="https://jeemain.nta.nic.in/" target="_blank" style="color:var(--accent2)">jeemain.nta.nic.in</a> — not just results, but <strong>any new update, notification, or announcement</strong> posted on the page.</p>
 
-    <div class="motivation-banner">
-      <span class="emoji">📚</span>
-      <p><strong>Focus on your Board exams — we'll handle the rest!</strong><br>Set up your speakers, hit Start, and keep this tab open in the background. Study in peace — the moment anything changes on the JEE Main website, we'll alert you with sound &amp; notification. No need to keep refreshing manually.</p>
+    <div class="motivation-banner" style="background:linear-gradient(135deg, rgba(234,179,8,.08), rgba(249,115,22,.06)); border-color:rgba(234,179,8,.2);">
+      <span class="emoji">📢</span>
+      <p><strong style="color:var(--yellow);">Monitoring is currently paused — January session results are out!</strong><br>
+      This monitor will be re-enabled for the <strong style="color:var(--text);">JEE Main 2026 April session</strong> and <strong style="color:var(--text);">JEE Advanced</strong> results. Bookmark this page so you're ready when the time comes!</p>
     </div>
 
     <!-- Status -->
     <div class="status-hero" id="statusHero">
       <div class="ripple"></div>
       <div class="status-icon" id="statusIcon">⏸️</div>
-      <div class="status-label" id="statusLabel">Ready to Monitor</div>
-      <div class="status-sub" id="statusSub">Click Start to begin watching for changes</div>
+      <div class="status-label" id="statusLabel" style="color:var(--yellow)">Monitoring Paused</div>
+      <div class="status-sub" id="statusSub">Jan session results are out · Will resume for April session &amp; JEE Advanced</div>
     </div>
 
     <!-- Stats -->
@@ -259,9 +260,9 @@
         Controls
       </div>
       <div class="controls">
-        <button class="btn btn-primary" id="btnStart" onclick="startMonitoring()">
+        <button class="btn btn-primary" id="btnStart" onclick="startMonitoring()" disabled title="Monitoring will resume for April session">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          Start
+          Paused
         </button>
         <button class="btn btn-danger" id="btnStop" onclick="stopMonitoring()" disabled>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
