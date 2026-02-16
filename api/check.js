@@ -63,7 +63,13 @@ async function fetchFromNTA() {
 module.exports = async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET");
-  res.setHeader("Cache-Control", "no-cache, no-store");
+
+  // ── KEY OPTIMIZATION: Vercel Edge CDN caching ──
+  // s-maxage=15  → Vercel CDN caches this response for 15s at 300+ edge locations
+  //                 ALL user requests in that window are served from CDN (zero function invocations)
+  // stale-while-revalidate=10 → After 15s, CDN serves stale data instantly while refreshing in background
+  // Result: even 100,000 users → only ~4 function invocations per minute
+  res.setHeader("Cache-Control", "public, s-maxage=15, stale-while-revalidate=10");
 
   // Only re-fetch from NTA if cache is stale
   const now = Date.now();

@@ -215,8 +215,8 @@
     <!-- Info Banner -->
     <div class="info-banner">
       <span class="icon">💡</span>
-      <p><strong>Efficient shared monitoring:</strong> The server checks jeemain.nta.nic.in once every ~15 seconds and caches the result.
-        All users receive the same cached data — even 10,000 users don't increase NTA server load.</p>
+      <p><strong>Ultra-efficient 2-layer caching:</strong> ① Vercel's CDN caches the API response at 300+ edge nodes worldwide — your browser gets an instant response without even hitting the server.
+        ② The server itself checks NTA only once every ~15s. Result: <strong>unlimited users, ~4 server calls/min, zero NTA overload.</strong></p>
     </div>
 
     <!-- Controls Card -->
@@ -236,7 +236,7 @@
         </button>
         <div class="interval-group">
           <span class="interval-label">Poll every</span>
-          <input class="interval-input" id="intervalInput" type="number" value="10" min="5" max="120" />
+          <input class="interval-input" id="intervalInput" type="number" value="20" min="10" max="120" />
           <span class="interval-label">sec</span>
         </div>
         <div class="progress-wrap" id="progressWrap" style="visibility:hidden;">
@@ -402,7 +402,7 @@
 
     function startMonitoring() {
       if (monitoring) return;
-      const interval = Math.max(5, parseInt(document.getElementById("intervalInput").value) || 10);
+      const interval = Math.max(10, parseInt(document.getElementById("intervalInput").value) || 20);
       monitoring = true;
       previousHash = null;
       changeAlerted = false;

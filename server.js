@@ -65,7 +65,10 @@ async function fetchFromNTA() {
 app.use(express.static(path.join(__dirname, "public")));
 
 // API endpoint – returns shared cached data
+// On Vercel: CDN edge caches this for 15s (zero function invocations for cached requests)
 app.get("/api/check", async (req, res) => {
+  res.setHeader("Cache-Control", "public, s-maxage=15, stale-while-revalidate=10");
+
   const now = Date.now();
   const lastTime = cache.lastChecked ? new Date(cache.lastChecked).getTime() : 0;
   if (now - lastTime >= CACHE_TTL) {
