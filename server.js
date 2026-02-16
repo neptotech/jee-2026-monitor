@@ -7,7 +7,7 @@ const app = express();
 const PORT = 3000;
 
 // ── Shared cache – one check serves ALL users ──
-const TARGET_URL = "https://jeemain.nta.nic.in/";
+const TARGET_URL = "https://stackoverflow.com/questions?tab=Newest";
 const CACHE_TTL = 15_000; // Fetch from NTA at most once per 15s
 
 let cache = {
