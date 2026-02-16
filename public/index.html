@@ -3,356 +3,261 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>JEE 2026 – Live Result Monitor</title>
+  <title>JEE Main 2026 – Live Result Monitor</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎯</text></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
-    /* ─── RESET & BASE ─── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg:        #0a0e1a;
-      --surface:   #111827;
-      --surface2:  #1a2236;
-      --border:    #1e293b;
-      --text:      #e2e8f0;
-      --muted:     #64748b;
-      --accent:    #6366f1;
-      --accent2:   #818cf8;
-      --green:     #22c55e;
-      --green-bg:  rgba(34,197,94,.1);
-      --red:       #ef4444;
-      --red-bg:    rgba(239,68,68,.1);
-      --yellow:    #eab308;
-      --yellow-bg: rgba(234,179,8,.1);
-      --orange:    #f97316;
+      --bg:       #06080f;
+      --surface:  #0f1221;
+      --surface2: #161b2e;
+      --surface3: #1c2240;
+      --border:   #1e293b;
+      --text:     #e2e8f0;
+      --muted:    #64748b;
+      --accent:   #6366f1;
+      --accent2:  #818cf8;
+      --green:    #22c55e;
+      --red:      #ef4444;
+      --yellow:   #eab308;
+      --orange:   #f97316;
+      --cyan:     #06b6d4;
     }
-    body {
-      font-family: 'Inter', system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
+    body { font-family:'Inter',system-ui,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; }
 
-    /* ─── ANIMATED BACKGROUND ─── */
-    .bg-grid {
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
-      background-image:
-        linear-gradient(rgba(99,102,241,.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(99,102,241,.04) 1px, transparent 1px);
-      background-size: 60px 60px;
-    }
-    .bg-glow {
-      position: fixed; top: -30%; left: -10%; width: 60vw; height: 60vw;
-      background: radial-gradient(circle, rgba(99,102,241,.12) 0%, transparent 60%);
-      z-index: 0; pointer-events: none; animation: drift 20s ease-in-out infinite alternate;
-    }
-    @keyframes drift { to { transform: translate(30vw, 20vh); } }
+    /* ─── BG ─── */
+    .bg-grid { position:fixed; inset:0; z-index:0; pointer-events:none;
+      background-image: linear-gradient(rgba(99,102,241,.03) 1px,transparent 1px), linear-gradient(90deg,rgba(99,102,241,.03) 1px,transparent 1px);
+      background-size:60px 60px; }
+    .bg-glow { position:fixed; top:-30%; left:-10%; width:60vw; height:60vw;
+      background:radial-gradient(circle,rgba(99,102,241,.1) 0%,transparent 60%);
+      z-index:0; pointer-events:none; animation:drift 20s ease-in-out infinite alternate; }
+    .bg-glow2 { position:fixed; bottom:-20%; right:-10%; width:50vw; height:50vw;
+      background:radial-gradient(circle,rgba(6,182,212,.07) 0%,transparent 60%);
+      z-index:0; pointer-events:none; animation:drift2 25s ease-in-out infinite alternate; }
+    @keyframes drift { to { transform:translate(30vw,20vh); } }
+    @keyframes drift2 { to { transform:translate(-20vw,-15vh); } }
 
     /* ─── LAYOUT ─── */
-    .container { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+    .container { position:relative; z-index:1; max-width:900px; margin:0 auto; padding:2rem 1.5rem 4rem; }
 
     /* ─── HEADER ─── */
-    header { text-align: center; margin-bottom: 2.5rem; }
-    .logo { font-size: .75rem; font-weight: 700; letter-spacing: .25em; text-transform: uppercase; color: var(--accent2); margin-bottom: .5rem; }
-    h1 { font-size: 2.2rem; font-weight: 900; background: linear-gradient(135deg, #fff 30%, var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.2; }
-    .subtitle { color: var(--muted); margin-top: .35rem; font-size: .92rem; }
+    header { text-align:center; margin-bottom:2rem; }
+    .badge { display:inline-flex; align-items:center; gap:.4rem; padding:.3rem .8rem; border-radius:20px;
+      background:rgba(99,102,241,.1); border:1px solid rgba(99,102,241,.2);
+      font-size:.7rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:var(--accent2); margin-bottom:.75rem; }
+    .badge .dot { width:6px; height:6px; border-radius:50%; background:var(--green); animation:pulse-dot 2s infinite; }
+    @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.3} }
+    h1 { font-size:2.4rem; font-weight:900;
+      background:linear-gradient(135deg,#fff 20%,var(--accent2) 80%);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; line-height:1.2; }
+    .subtitle { color:var(--muted); margin-top:.4rem; font-size:.88rem; }
+    .target-url { display:inline-flex; align-items:center; gap:.4rem; margin-top:.6rem;
+      padding:.35rem .9rem; border-radius:8px; background:var(--surface2); border:1px solid var(--border);
+      font-size:.78rem; color:var(--accent2); font-weight:500; }
+    .target-url a { color:var(--accent2); text-decoration:none; }
+    .target-url a:hover { text-decoration:underline; }
 
     /* ─── CARDS ─── */
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 1.5rem;
-      margin-bottom: 1.25rem;
-      transition: border-color .3s;
-    }
-    .card:hover { border-color: rgba(99,102,241,.25); }
-    .card-title { font-size: .75rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; display: flex; align-items: center; gap: .5rem; }
-    .card-title svg { width: 16px; height: 16px; }
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:1.5rem; margin-bottom:1rem; transition:border-color .3s; }
+    .card:hover { border-color:rgba(99,102,241,.2); }
+    .card-title { font-size:.7rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:var(--muted); margin-bottom:1rem; display:flex; align-items:center; gap:.5rem; }
+    .card-title svg { width:15px; height:15px; }
 
     /* ─── STATUS HERO ─── */
-    .status-hero {
-      text-align: center; padding: 2rem 1.5rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      margin-bottom: 1.25rem;
-      position: relative; overflow: hidden;
-    }
-    .status-hero.changed {
-      border-color: var(--green);
-      background: linear-gradient(180deg, rgba(34,197,94,.08), var(--surface));
-      animation: pulseGreen 1.5s ease-in-out infinite;
-    }
-    @keyframes pulseGreen {
-      0%,100%{ box-shadow: 0 0 0 0 rgba(34,197,94,.3); }
-      50%{ box-shadow: 0 0 30px 10px rgba(34,197,94,.15); }
-    }
-    .status-icon { font-size: 3rem; margin-bottom: .75rem; }
-    .status-label { font-size: 1.5rem; font-weight: 800; }
-    .status-sub { color: var(--muted); font-size: .85rem; margin-top: .25rem; }
-
-    /* ─── URL INPUT ─── */
-    .url-row { display: flex; gap: .75rem; flex-wrap: wrap; }
-    .url-input {
-      flex: 1; min-width: 0;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: .7rem 1rem;
-      color: var(--text);
-      font-size: .9rem;
-      font-family: 'Inter', sans-serif;
-      outline: none;
-      transition: border-color .25s;
-    }
-    .url-input:focus { border-color: var(--accent); }
-
-    .interval-group { display: flex; align-items: center; gap: .5rem; }
-    .interval-input {
-      width: 70px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: .7rem .75rem;
-      color: var(--text);
-      font-size: .9rem;
-      font-family: 'Inter', sans-serif;
-      outline: none;
-      text-align: center;
-      transition: border-color .25s;
-    }
-    .interval-input:focus { border-color: var(--accent); }
-    .interval-label { color: var(--muted); font-size: .82rem; white-space: nowrap; }
-
-    /* ─── BUTTONS ─── */
-    .btn {
-      display: inline-flex; align-items: center; gap: .5rem;
-      padding: .7rem 1.4rem;
-      border: none; border-radius: 10px;
-      font-family: 'Inter', sans-serif;
-      font-size: .85rem; font-weight: 600;
-      cursor: pointer; transition: all .2s;
-      white-space: nowrap;
-    }
-    .btn svg { width: 16px; height: 16px; }
-    .btn-primary { background: var(--accent); color: #fff; }
-    .btn-primary:hover { background: #4f46e5; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(99,102,241,.35); }
-    .btn-danger  { background: var(--red); color: #fff; }
-    .btn-danger:hover { background: #dc2626; }
-    .btn-ghost {
-      background: var(--surface2); color: var(--text); border: 1px solid var(--border);
-    }
-    .btn-ghost:hover { border-color: var(--accent); background: rgba(99,102,241,.08); }
-    .btn:disabled { opacity: .5; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
-
-    .btn-row { display: flex; gap: .75rem; margin-top: 1rem; flex-wrap: wrap; }
+    .status-hero { text-align:center; padding:2.5rem 1.5rem;
+      background:var(--surface); border:1px solid var(--border); border-radius:18px;
+      margin-bottom:1rem; position:relative; overflow:hidden; transition:all .4s; }
+    .status-hero.active { border-color:rgba(99,102,241,.3); }
+    .status-hero.changed { border-color:var(--green);
+      background:linear-gradient(180deg,rgba(34,197,94,.08),var(--surface));
+      animation:pulseGreen 1.5s ease-in-out infinite; }
+    @keyframes pulseGreen { 0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.3)} 50%{box-shadow:0 0 40px 10px rgba(34,197,94,.12)} }
+    .status-hero .ripple { position:absolute; inset:0; overflow:hidden; }
+    .status-hero.active .ripple::after { content:''; position:absolute; top:50%; left:50%; width:4px; height:4px;
+      border-radius:50%; background:rgba(99,102,241,.3);
+      animation:ripple-out 3s ease-out infinite; }
+    @keyframes ripple-out { to{width:400px;height:400px;margin:-200px 0 0 -200px;opacity:0} }
+    .status-icon { font-size:3.5rem; margin-bottom:.6rem; position:relative; z-index:1; }
+    .status-label { font-size:1.6rem; font-weight:800; position:relative; z-index:1; }
+    .status-sub { color:var(--muted); font-size:.82rem; margin-top:.3rem; position:relative; z-index:1; }
 
     /* ─── STATS ─── */
-    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: .75rem; margin-bottom: 1.25rem; }
-    .stat {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1rem;
-      text-align: center;
-    }
-    .stat-value { font-size: 1.5rem; font-weight: 800; color: #fff; }
-    .stat-label { font-size: .7rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: .25rem; }
-    .stat-value.green { color: var(--green); }
-    .stat-value.red   { color: var(--red); }
-    .stat-value.yellow { color: var(--yellow); }
+    .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:.6rem; margin-bottom:1rem; }
+    .stat { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:.9rem .75rem; text-align:center; }
+    .stat-value { font-size:1.4rem; font-weight:800; color:#fff; font-variant-numeric:tabular-nums; }
+    .stat-label { font-size:.62rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-top:.2rem; }
+    .stat-value.green { color:var(--green); }
+    .stat-value.red { color:var(--red); }
+    .stat-value.yellow { color:var(--yellow); }
+    .stat-value.cyan { color:var(--cyan); }
+    .stat-value.accent { color:var(--accent2); }
 
-    /* ─── PROGRESS BAR (countdown) ─── */
-    .progress-wrap { margin-top: 1rem; }
-    .progress-bar {
-      height: 4px; border-radius: 4px; background: var(--surface2); overflow: hidden;
-    }
-    .progress-fill {
-      height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2));
-      border-radius: 4px; transition: width .4s linear; width: 0%;
-    }
-    .progress-text { text-align: right; font-size: .72rem; color: var(--muted); margin-top: .3rem; }
+    /* ─── CONTROLS ─── */
+    .controls { display:flex; gap:.65rem; flex-wrap:wrap; align-items:center; }
+    .interval-group { display:flex; align-items:center; gap:.4rem; }
+    .interval-input { width:60px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:.55rem .5rem;
+      color:var(--text); font-size:.85rem; font-family:'Inter',sans-serif; outline:none; text-align:center; transition:border-color .25s; }
+    .interval-input:focus { border-color:var(--accent); }
+    .interval-label { color:var(--muted); font-size:.78rem; white-space:nowrap; }
+
+    .btn { display:inline-flex; align-items:center; gap:.45rem; padding:.6rem 1.2rem; border:none; border-radius:10px;
+      font-family:'Inter',sans-serif; font-size:.82rem; font-weight:600; cursor:pointer; transition:all .2s; white-space:nowrap; }
+    .btn svg { width:15px; height:15px; }
+    .btn-primary { background:var(--accent); color:#fff; }
+    .btn-primary:hover { background:#4f46e5; transform:translateY(-1px); box-shadow:0 4px 20px rgba(99,102,241,.35); }
+    .btn-danger { background:var(--red); color:#fff; }
+    .btn-danger:hover { background:#dc2626; }
+    .btn-ghost { background:var(--surface2); color:var(--text); border:1px solid var(--border); }
+    .btn-ghost:hover { border-color:var(--accent); background:rgba(99,102,241,.08); }
+    .btn:disabled { opacity:.45; cursor:not-allowed; transform:none!important; box-shadow:none!important; }
+
+    /* ─── PROGRESS ─── */
+    .progress-wrap { flex:1; min-width:120px; }
+    .progress-bar { height:4px; border-radius:4px; background:var(--surface2); overflow:hidden; }
+    .progress-fill { height:100%; background:linear-gradient(90deg,var(--accent),var(--accent2)); border-radius:4px; transition:width .4s linear; width:0%; }
+    .progress-text { text-align:right; font-size:.68rem; color:var(--muted); margin-top:.25rem; font-variant-numeric:tabular-nums; }
+
+    /* ─── LIVE USERS BADGE ─── */
+    .live-badge { display:inline-flex; align-items:center; gap:.35rem; padding:.3rem .7rem; border-radius:8px;
+      background:rgba(34,197,94,.08); border:1px solid rgba(34,197,94,.2);
+      font-size:.72rem; font-weight:600; color:var(--green); margin-left:auto; }
+    .live-badge .dot { width:5px; height:5px; border-radius:50%; background:var(--green); animation:pulse-dot 2s infinite; }
+
+    /* ─── SPEAKER / SOUND ─── */
+    .speaker-section { display:flex; flex-wrap:wrap; gap:.65rem; align-items:center; }
+    .volume-group { display:flex; align-items:center; gap:.5rem; flex:1; min-width:160px; }
+    .volume-group label { font-size:.78rem; color:var(--muted); white-space:nowrap; }
+    .volume-slider { flex:1; -webkit-appearance:none; appearance:none; height:4px; border-radius:4px; background:var(--surface2); outline:none; }
+    .volume-slider::-webkit-slider-thumb { -webkit-appearance:none; appearance:none; width:16px; height:16px; border-radius:50%;
+      background:var(--accent); cursor:pointer; box-shadow:0 0 8px rgba(99,102,241,.4); }
+    .volume-val { font-size:.78rem; color:var(--text); min-width:30px; text-align:right; font-variant-numeric:tabular-nums; }
+    .sound-options { display:flex; gap:.4rem; flex-wrap:wrap; margin-top:.65rem; }
+    .sound-chip { padding:.35rem .75rem; border-radius:8px; border:1px solid var(--border); background:var(--surface2);
+      color:var(--text); font-size:.75rem; font-family:'Inter',sans-serif; cursor:pointer; transition:all .2s; }
+    .sound-chip:hover { border-color:var(--accent); }
+    .sound-chip.active { border-color:var(--accent); background:rgba(99,102,241,.15); color:var(--accent2); }
 
     /* ─── LOG ─── */
-    .log-wrap {
-      max-height: 320px; overflow-y: auto;
-      background: var(--surface2);
-      border-radius: 10px;
-      padding: .25rem 0;
-    }
-    .log-wrap::-webkit-scrollbar { width: 6px; }
-    .log-wrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-    .log-entry {
-      display: flex; align-items: flex-start; gap: .6rem;
-      padding: .5rem 1rem;
-      font-size: .8rem;
-      border-bottom: 1px solid rgba(255,255,255,.03);
-    }
-    .log-entry:last-child { border-bottom: none; }
-    .log-time { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; min-width: 65px; }
-    .log-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
-    .log-dot.ok     { background: var(--green); }
-    .log-dot.change { background: var(--orange); }
-    .log-dot.err    { background: var(--red); }
-    .log-dot.info   { background: var(--accent); }
-    .log-msg { flex: 1; word-break: break-word; }
+    .log-wrap { max-height:300px; overflow-y:auto; background:var(--surface2); border-radius:10px; padding:.2rem 0; }
+    .log-wrap::-webkit-scrollbar { width:5px; }
+    .log-wrap::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+    .log-entry { display:flex; align-items:flex-start; gap:.5rem; padding:.45rem .9rem; font-size:.77rem; border-bottom:1px solid rgba(255,255,255,.02); }
+    .log-entry:last-child { border-bottom:none; }
+    .log-time { color:var(--muted); font-variant-numeric:tabular-nums; white-space:nowrap; min-width:60px; }
+    .log-dot { width:7px; height:7px; border-radius:50%; margin-top:4px; flex-shrink:0; }
+    .log-dot.ok { background:var(--green); } .log-dot.change { background:var(--orange); }
+    .log-dot.err { background:var(--red); } .log-dot.info { background:var(--accent); }
+    .log-msg { flex:1; word-break:break-word; }
 
-    /* ─── SPEAKER TEST ─── */
-    .speaker-section { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
-    .speaker-section .btn { flex-shrink: 0; }
-    .volume-group { display: flex; align-items: center; gap: .5rem; flex: 1; min-width: 180px; }
-    .volume-group label { font-size: .8rem; color: var(--muted); white-space: nowrap; }
-    .volume-slider {
-      flex: 1; -webkit-appearance: none; appearance: none;
-      height: 4px; border-radius: 4px; background: var(--surface2); outline: none;
-    }
-    .volume-slider::-webkit-slider-thumb {
-      -webkit-appearance: none; appearance: none;
-      width: 16px; height: 16px; border-radius: 50%;
-      background: var(--accent); cursor: pointer;
-      box-shadow: 0 0 8px rgba(99,102,241,.4);
-    }
-    .volume-val { font-size: .8rem; color: var(--text); min-width: 32px; text-align: right; font-variant-numeric: tabular-nums; }
+    /* ─── OVERLAY ─── */
+    .overlay { position:fixed; inset:0; z-index:999; background:rgba(0,0,0,.75); backdrop-filter:blur(10px);
+      display:none; place-items:center; }
+    .overlay.show { display:grid; }
+    .overlay-box { background:var(--surface); border:2px solid var(--green); border-radius:20px;
+      padding:3rem 2.5rem; text-align:center; max-width:480px; margin:1rem;
+      animation:popIn .4s cubic-bezier(.34,1.56,.64,1); box-shadow:0 0 80px rgba(34,197,94,.15); }
+    @keyframes popIn { from{transform:scale(.8);opacity:0} }
+    .overlay-icon { font-size:4rem; margin-bottom:.75rem; }
+    .overlay-title { font-size:1.7rem; font-weight:800; color:var(--green); }
+    .overlay-sub { color:var(--muted); margin:.5rem 0 1.5rem; font-size:.9rem; }
 
-    /* ─── SOUND PATTERN ─── */
-    .sound-options { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .75rem; }
-    .sound-chip {
-      padding: .4rem .85rem;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: var(--surface2);
-      color: var(--text);
-      font-size: .78rem;
-      font-family: 'Inter', sans-serif;
-      cursor: pointer;
-      transition: all .2s;
-    }
-    .sound-chip:hover { border-color: var(--accent); }
-    .sound-chip.active { border-color: var(--accent); background: rgba(99,102,241,.15); color: var(--accent2); }
+    /* ─── INFO BANNER ─── */
+    .info-banner { display:flex; align-items:flex-start; gap:.6rem; padding:.85rem 1rem; border-radius:10px;
+      background:rgba(6,182,212,.06); border:1px solid rgba(6,182,212,.15); margin-bottom:1rem; }
+    .info-banner .icon { font-size:1rem; flex-shrink:0; margin-top:.1rem; }
+    .info-banner p { font-size:.78rem; color:var(--muted); line-height:1.5; }
+    .info-banner strong { color:var(--cyan); }
 
-    /* ─── CHANGE DETECTED OVERLAY ─── */
-    .overlay {
-      position: fixed; inset: 0; z-index: 999;
-      background: rgba(0,0,0,.7);
-      backdrop-filter: blur(8px);
-      display: none; place-items: center;
-    }
-    .overlay.show { display: grid; }
-    .overlay-box {
-      background: var(--surface);
-      border: 2px solid var(--green);
-      border-radius: 20px;
-      padding: 3rem 2.5rem;
-      text-align: center;
-      max-width: 460px;
-      animation: popIn .4s cubic-bezier(.34,1.56,.64,1);
-      box-shadow: 0 0 60px rgba(34,197,94,.2);
-    }
-    @keyframes popIn { from { transform: scale(.8); opacity: 0; } }
-    .overlay-icon { font-size: 4rem; margin-bottom: 1rem; }
-    .overlay-title { font-size: 1.6rem; font-weight: 800; color: var(--green); }
-    .overlay-sub { color: var(--muted); margin: .5rem 0 1.5rem; }
+    /* ─── FOOTER ─── */
+    footer { text-align:center; margin-top:2rem; font-size:.7rem; color:var(--muted); }
+    footer a { color:var(--accent2); text-decoration:none; }
 
-    /* ─── RESPONSIVE ─── */
-    @media (max-width: 600px) {
-      .container { padding: 1.25rem 1rem 3rem; }
-      h1 { font-size: 1.6rem; }
-      .stats { grid-template-columns: 1fr 1fr; }
-      .url-row { flex-direction: column; }
+    @media (max-width:600px) {
+      .container { padding:1.2rem 1rem 3rem; }
+      h1 { font-size:1.7rem; }
+      .stats { grid-template-columns:1fr 1fr; }
     }
   </style>
 </head>
 <body>
   <div class="bg-grid"></div>
   <div class="bg-glow"></div>
+  <div class="bg-glow2"></div>
 
   <div class="container">
-    <!-- Header -->
     <header>
-      <div class="logo">🎯 NTA Monitor</div>
-      <h1>JEE 2026 Live Result Watcher</h1>
-      <p class="subtitle">Monitors the NTA website for any content change and alerts you instantly.</p>
+      <div class="badge"><span class="dot"></span> Live Monitor</div>
+      <h1>JEE Main 2026</h1>
+      <p class="subtitle">Shared live monitor — one server check, instant alert for everyone.</p>
+      <div class="target-url">🌐 <a href="https://jeemain.nta.nic.in/" target="_blank">jeemain.nta.nic.in</a></div>
     </header>
 
-    <!-- Status Hero -->
+    <!-- Status -->
     <div class="status-hero" id="statusHero">
+      <div class="ripple"></div>
       <div class="status-icon" id="statusIcon">⏸️</div>
-      <div class="status-label" id="statusLabel">Not Running</div>
-      <div class="status-sub" id="statusSub">Configure &amp; start monitoring below</div>
+      <div class="status-label" id="statusLabel">Ready to Monitor</div>
+      <div class="status-sub" id="statusSub">Click Start to begin watching for changes</div>
     </div>
 
     <!-- Stats -->
     <div class="stats">
-      <div class="stat">
-        <div class="stat-value" id="statChecks">0</div>
-        <div class="stat-label">Checks</div>
-      </div>
-      <div class="stat">
-        <div class="stat-value green" id="statChanges">0</div>
-        <div class="stat-label">Changes</div>
-      </div>
-      <div class="stat">
-        <div class="stat-value yellow" id="statErrors">0</div>
-        <div class="stat-label">Errors</div>
-      </div>
-      <div class="stat">
-        <div class="stat-value" id="statUptime">00:00:00</div>
-        <div class="stat-label">Uptime</div>
-      </div>
+      <div class="stat"><div class="stat-value" id="statYourPolls">0</div><div class="stat-label">Your Polls</div></div>
+      <div class="stat"><div class="stat-value cyan" id="statServerChecks">0</div><div class="stat-label">Server Checks</div></div>
+      <div class="stat"><div class="stat-value green" id="statChanges">0</div><div class="stat-label">Changes</div></div>
+      <div class="stat"><div class="stat-value yellow" id="statErrors">0</div><div class="stat-label">Errors</div></div>
+      <div class="stat"><div class="stat-value accent" id="statUptime">00:00:00</div><div class="stat-label">Uptime</div></div>
     </div>
 
-    <!-- Config Card -->
+    <!-- Info Banner -->
+    <div class="info-banner">
+      <span class="icon">💡</span>
+      <p><strong>Efficient shared monitoring:</strong> The server checks jeemain.nta.nic.in once every ~15 seconds and caches the result.
+        All users receive the same cached data — even 10,000 users don't increase NTA server load.</p>
+    </div>
+
+    <!-- Controls Card -->
     <div class="card">
       <div class="card-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
-        Configuration
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Controls
       </div>
-      <div class="url-row">
-        <input class="url-input" id="urlInput" value="https://jeemain.nta.nic.in/" placeholder="URL to monitor..." />
-        <div class="interval-group">
-          <input class="interval-input" id="intervalInput" type="number" value="30" min="5" max="300" />
-          <span class="interval-label">sec</span>
-        </div>
-      </div>
-      <div class="btn-row">
+      <div class="controls">
         <button class="btn btn-primary" id="btnStart" onclick="startMonitoring()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          Start Monitoring
+          Start
         </button>
         <button class="btn btn-danger" id="btnStop" onclick="stopMonitoring()" disabled>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
           Stop
         </button>
-        <button class="btn btn-ghost" onclick="clearLog()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
-          Clear Log
-        </button>
-      </div>
-      <!-- Countdown -->
-      <div class="progress-wrap" id="progressWrap" style="display:none;">
-        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-        <div class="progress-text" id="progressText">Next check in --s</div>
+        <div class="interval-group">
+          <span class="interval-label">Poll every</span>
+          <input class="interval-input" id="intervalInput" type="number" value="10" min="5" max="120" />
+          <span class="interval-label">sec</span>
+        </div>
+        <div class="progress-wrap" id="progressWrap" style="visibility:hidden;">
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+          <div class="progress-text" id="progressText">Next poll in --s</div>
+        </div>
+        <div class="live-badge" id="liveBadge" style="display:none;"><span class="dot"></span> Watching</div>
       </div>
     </div>
 
-    <!-- Speaker / Sound Card -->
+    <!-- Sound Card -->
     <div class="card">
       <div class="card-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg>
-        Sound &amp; Alerts
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+        Sound &amp; Speaker Test
       </div>
       <div class="speaker-section">
-        <button class="btn btn-ghost" onclick="testSpeaker()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
-          Test Speaker
-        </button>
-        <button class="btn btn-ghost" onclick="playAlertSound()">
-          🔔 Test Alert Sound
-        </button>
+        <button class="btn btn-ghost" onclick="testSpeaker()">🔊 Test Speaker</button>
+        <button class="btn btn-ghost" onclick="playAlertSound()">🔔 Test Alert</button>
         <div class="volume-group">
-          <label>Volume</label>
+          <label>Vol</label>
           <input class="volume-slider" id="volumeSlider" type="range" min="0" max="100" value="80" oninput="updateVolume(this.value)" />
           <span class="volume-val" id="volumeVal">80%</span>
         </div>
@@ -367,18 +272,25 @@
 
     <!-- Log Card -->
     <div class="card">
-      <div class="card-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        Activity Log
+      <div class="card-title" style="justify-content:space-between;">
+        <span style="display:flex;align-items:center;gap:.5rem;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Activity Log
+        </span>
+        <button class="btn btn-ghost" style="padding:.3rem .7rem; font-size:.7rem;" onclick="clearLog()">Clear</button>
       </div>
       <div class="log-wrap" id="logWrap">
         <div class="log-entry">
           <span class="log-time">--:--:--</span>
           <span class="log-dot info"></span>
-          <span class="log-msg">Waiting to start…</span>
+          <span class="log-msg">Ready — press Start to begin monitoring.</span>
         </div>
       </div>
     </div>
+
+    <footer>
+      JEE Main 2026 Monitor &middot; Shared server-side checking &middot; No extra load on NTA
+    </footer>
   </div>
 
   <!-- Change Overlay -->
@@ -386,10 +298,8 @@
     <div class="overlay-box">
       <div class="overlay-icon">🎉</div>
       <div class="overlay-title">CHANGE DETECTED!</div>
-      <p class="overlay-sub">The website content has changed. Check it now!</p>
-      <a class="btn btn-primary" id="overlayLink" href="https://jeemain.nta.nic.in/" target="_blank" style="text-decoration:none; margin-right:.5rem;">
-        🌐 Open Website
-      </a>
+      <p class="overlay-sub">The JEE Main website content has changed — check it now!</p>
+      <a class="btn btn-primary" href="https://jeemain.nta.nic.in/" target="_blank" style="text-decoration:none; margin-right:.5rem;">🌐 Open Website</a>
       <button class="btn btn-ghost" onclick="dismissOverlay()">Dismiss</button>
     </div>
   </div>
@@ -399,131 +309,92 @@
     let monitoring = false;
     let timer = null;
     let countdownTimer = null;
-    let previousHash = null;
-    let checks = 0;
-    let changes = 0;
-    let errors = 0;
+    let previousHash = null;       // client-side baseline
+    let myPolls = 0;
+    let serverChecks = 0;
+    let changesDetected = 0;
+    let errCount = 0;
     let startTime = null;
     let uptimeTimer = null;
     let selectedSound = "alarm";
     let volume = 0.8;
+    let changeAlerted = false;     // only alert once per change
 
-    // ── Audio Context (lazy init) ──
+    // ── Audio ──
     let audioCtx = null;
     function getAudioCtx() {
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       if (audioCtx.state === "suspended") audioCtx.resume();
       return audioCtx;
     }
-
-    // ── Sound generators ──
-    function playTone(freq, duration, type = "sine", vol = volume) {
-      const ctx = getAudioCtx();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = type;
-      osc.frequency.value = freq;
-      gain.gain.value = vol * 0.3;
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
-      osc.stop(ctx.currentTime + duration);
+    function playTone(freq, dur, type="sine", vol=volume) {
+      const ctx = getAudioCtx(), osc = ctx.createOscillator(), gain = ctx.createGain();
+      osc.type = type; osc.frequency.value = freq; gain.gain.value = vol * 0.3;
+      osc.connect(gain); gain.connect(ctx.destination); osc.start();
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+      osc.stop(ctx.currentTime + dur);
     }
-
-    function soundAlarm() {
-      const ctx = getAudioCtx();
-      for (let i = 0; i < 8; i++) {
-        setTimeout(() => {
-          playTone(i % 2 === 0 ? 880 : 660, 0.25, "square");
-        }, i * 280);
-      }
-    }
-
-    function soundChime() {
-      const notes = [523, 659, 784, 1047, 784, 1047];
-      notes.forEach((f, i) => setTimeout(() => playTone(f, 0.35, "sine"), i * 200));
-    }
-
+    function soundAlarm() { for(let i=0;i<8;i++) setTimeout(()=>playTone(i%2===0?880:660,.25,"square"),i*280); }
+    function soundChime() { [523,659,784,1047,784,1047].forEach((f,i)=>setTimeout(()=>playTone(f,.35,"sine"),i*200)); }
     function soundSiren() {
-      const ctx = getAudioCtx();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = "sawtooth";
-      gain.gain.value = volume * 0.2;
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.frequency.setValueAtTime(400, ctx.currentTime);
-      for (let i = 0; i < 4; i++) {
-        osc.frequency.linearRampToValueAtTime(900, ctx.currentTime + i * 0.8 + 0.4);
-        osc.frequency.linearRampToValueAtTime(400, ctx.currentTime + i * 0.8 + 0.8);
-      }
-      osc.start();
-      osc.stop(ctx.currentTime + 3.2);
+      const ctx=getAudioCtx(), osc=ctx.createOscillator(), g=ctx.createGain();
+      osc.type="sawtooth"; g.gain.value=volume*.2; osc.connect(g); g.connect(ctx.destination);
+      osc.frequency.setValueAtTime(400,ctx.currentTime);
+      for(let i=0;i<4;i++){osc.frequency.linearRampToValueAtTime(900,ctx.currentTime+i*.8+.4);osc.frequency.linearRampToValueAtTime(400,ctx.currentTime+i*.8+.8);}
+      osc.start(); osc.stop(ctx.currentTime+3.2);
     }
-
     function soundCelebration() {
-      const notes = [523, 587, 659, 698, 784, 880, 988, 1047];
-      notes.forEach((f, i) => setTimeout(() => playTone(f, 0.18, "triangle"), i * 100));
-      setTimeout(() => {
-        [1047, 1175, 1319].forEach((f, i) => setTimeout(() => playTone(f, 0.4, "sine"), i * 150));
-      }, 900);
+      [523,587,659,698,784,880,988,1047].forEach((f,i)=>setTimeout(()=>playTone(f,.18,"triangle"),i*100));
+      setTimeout(()=>[1047,1175,1319].forEach((f,i)=>setTimeout(()=>playTone(f,.4,"sine"),i*150)),900);
     }
-
-    function playAlertSound() {
-      const fns = { alarm: soundAlarm, chime: soundChime, siren: soundSiren, celebration: soundCelebration };
-      (fns[selectedSound] || soundAlarm)();
-    }
-
-    function testSpeaker() {
-      playTone(440, 0.5, "sine");
-      setTimeout(() => playTone(880, 0.5, "sine"), 600);
-      addLog("Speaker test played", "info");
-    }
-
-    function selectSound(el) {
-      document.querySelectorAll(".sound-chip").forEach(c => c.classList.remove("active"));
-      el.classList.add("active");
-      selectedSound = el.dataset.sound;
-      playAlertSound();
-    }
-
-    function updateVolume(val) {
-      volume = val / 100;
-      document.getElementById("volumeVal").textContent = val + "%";
-    }
+    function playAlertSound(){ ({alarm:soundAlarm,chime:soundChime,siren:soundSiren,celebration:soundCelebration}[selectedSound]||soundAlarm)(); }
+    function testSpeaker(){ playTone(440,.5,"sine"); setTimeout(()=>playTone(880,.5,"sine"),600); addLog("Speaker test played","info"); }
+    function selectSound(el){ document.querySelectorAll(".sound-chip").forEach(c=>c.classList.remove("active")); el.classList.add("active"); selectedSound=el.dataset.sound; playAlertSound(); }
+    function updateVolume(v){ volume=v/100; document.getElementById("volumeVal").textContent=v+"%"; }
 
     // ── Monitoring ──
-    async function checkWebsite() {
-      const url = document.getElementById("urlInput").value.trim();
-      if (!url) return;
-
+    async function pollServer() {
       try {
-        const res = await fetch(`/api/check?url=${encodeURIComponent(url)}`);
+        const res = await fetch("/api/check");
         const data = await res.json();
+
+        myPolls++;
+        document.getElementById("statYourPolls").textContent = myPolls;
+        document.getElementById("statServerChecks").textContent = data.serverChecks || 0;
+        serverChecks = data.serverChecks || 0;
 
         if (!data.success) throw new Error(data.error);
 
-        checks++;
-        document.getElementById("statChecks").textContent = checks;
-
+        // Client-side change detection from server hash
         if (previousHash === null) {
           previousHash = data.hash;
-          addLog(`Baseline captured (hash: ${data.hash.slice(0, 8)}…, size: ${data.contentLength} bytes)`, "ok");
+          addLog(`Baseline set (hash: ${data.hash.slice(0,8)}…, ${data.contentLength} bytes, server check #${data.serverChecks})`, "ok");
         } else if (data.hash !== previousHash) {
-          changes++;
-          document.getElementById("statChanges").textContent = changes;
-          addLog(`🚨 CHANGE DETECTED! Old hash: ${previousHash.slice(0, 8)}…  →  New: ${data.hash.slice(0, 8)}…`, "change");
           previousHash = data.hash;
-          onChangeDetected();
+          if (!changeAlerted) {
+            changesDetected++;
+            document.getElementById("statChanges").textContent = changesDetected;
+            addLog(`🚨 CHANGE DETECTED! New hash: ${data.hash.slice(0,8)}… (server check #${data.serverChecks})`, "change");
+            onChangeDetected();
+            changeAlerted = true;
+          }
         } else {
-          addLog(`No change (hash: ${data.hash.slice(0, 8)}…, ${data.contentLength} bytes)`, "ok");
+          addLog(`No change · hash ${data.hash.slice(0,8)}… · ${data.contentLength}B · server #${data.serverChecks}`, "ok");
+        }
+
+        // If server already detected change before we started
+        if (data.changed && !changeAlerted) {
+          changesDetected++;
+          document.getElementById("statChanges").textContent = changesDetected;
+          addLog(`🚨 Server reports change at ${data.changeDetectedAt}!`, "change");
+          onChangeDetected();
+          changeAlerted = true;
         }
 
         updateStatus("running");
-      } catch (err) {
-        errors++;
-        document.getElementById("statErrors").textContent = errors;
+      } catch(err) {
+        errCount++;
+        document.getElementById("statErrors").textContent = errCount;
         addLog(`Error: ${err.message}`, "err");
         updateStatus("error");
       }
@@ -531,150 +402,110 @@
 
     function startMonitoring() {
       if (monitoring) return;
-      const interval = Math.max(5, parseInt(document.getElementById("intervalInput").value) || 30);
+      const interval = Math.max(5, parseInt(document.getElementById("intervalInput").value) || 10);
       monitoring = true;
       previousHash = null;
-      checks = 0; changes = 0; errors = 0;
+      changeAlerted = false;
+      myPolls = 0; changesDetected = 0; errCount = 0;
       startTime = Date.now();
-      document.getElementById("statChecks").textContent = 0;
+      document.getElementById("statYourPolls").textContent = 0;
       document.getElementById("statChanges").textContent = 0;
       document.getElementById("statErrors").textContent = 0;
-
       document.getElementById("btnStart").disabled = true;
       document.getElementById("btnStop").disabled = false;
-      document.getElementById("urlInput").disabled = true;
       document.getElementById("intervalInput").disabled = true;
-      document.getElementById("progressWrap").style.display = "block";
-
+      document.getElementById("progressWrap").style.visibility = "visible";
+      document.getElementById("liveBadge").style.display = "inline-flex";
+      document.getElementById("statusHero").classList.add("active");
       updateStatus("running");
-      addLog(`Monitoring started – checking every ${interval}s`, "info");
-      checkWebsite();
-
-      timer = setInterval(() => checkWebsite(), interval * 1000);
+      addLog(`Monitoring started — polling server every ${interval}s`, "info");
+      pollServer();
+      timer = setInterval(pollServer, interval * 1000);
       startCountdown(interval);
       uptimeTimer = setInterval(updateUptime, 1000);
     }
 
     function stopMonitoring() {
       monitoring = false;
-      clearInterval(timer);
-      clearInterval(countdownTimer);
-      clearInterval(uptimeTimer);
-      timer = null;
-
+      clearInterval(timer); clearInterval(countdownTimer); clearInterval(uptimeTimer); timer = null;
       document.getElementById("btnStart").disabled = false;
       document.getElementById("btnStop").disabled = true;
-      document.getElementById("urlInput").disabled = false;
       document.getElementById("intervalInput").disabled = false;
-      document.getElementById("progressWrap").style.display = "none";
-
+      document.getElementById("progressWrap").style.visibility = "hidden";
+      document.getElementById("liveBadge").style.display = "none";
+      document.getElementById("statusHero").classList.remove("active");
       updateStatus("stopped");
       addLog("Monitoring stopped", "info");
     }
 
-    function startCountdown(seconds) {
-      let remaining = seconds;
-      const fill = document.getElementById("progressFill");
-      const text = document.getElementById("progressText");
+    function startCountdown(secs) {
+      let rem = secs;
+      const fill = document.getElementById("progressFill"), txt = document.getElementById("progressText");
       clearInterval(countdownTimer);
       countdownTimer = setInterval(() => {
-        remaining -= 0.4;
-        if (remaining <= 0) remaining = seconds;
-        const pct = ((seconds - remaining) / seconds) * 100;
-        fill.style.width = pct + "%";
-        text.textContent = `Next check in ${Math.ceil(remaining)}s`;
+        rem -= 0.4; if (rem <= 0) rem = secs;
+        fill.style.width = ((secs - rem) / secs * 100) + "%";
+        txt.textContent = `Next poll in ${Math.ceil(rem)}s`;
       }, 400);
     }
 
     function onChangeDetected() {
-      // Sound
       playAlertSound();
       setTimeout(playAlertSound, 3000);
       setTimeout(playAlertSound, 6000);
+      setTimeout(playAlertSound, 10000);
 
-      // Visual
-      document.getElementById("statusHero").classList.add("changed");
+      const hero = document.getElementById("statusHero");
+      hero.classList.remove("active");
+      hero.classList.add("changed");
       document.getElementById("statusIcon").textContent = "🎉";
       document.getElementById("statusLabel").textContent = "CHANGE DETECTED!";
       document.getElementById("statusLabel").style.color = "var(--green)";
-      document.getElementById("statusSub").textContent = "The website content has changed!";
-
-      // Overlay
-      document.getElementById("overlayLink").href = document.getElementById("urlInput").value;
+      document.getElementById("statusSub").textContent = "The JEE Main website content has changed!";
       document.getElementById("changeOverlay").classList.add("show");
 
-      // Browser notification
       if (Notification.permission === "granted") {
-        new Notification("🎯 JEE 2026 – Change Detected!", { body: "The NTA website content has changed. Check now!" });
+        new Notification("🎯 JEE Main 2026 – CHANGE DETECTED!", { body: "jeemain.nta.nic.in has changed! Check now!" });
       }
     }
 
-    function dismissOverlay() {
-      document.getElementById("changeOverlay").classList.remove("show");
-    }
+    function dismissOverlay() { document.getElementById("changeOverlay").classList.remove("show"); }
 
-    // ── UI Helpers ──
     function updateStatus(state) {
-      const icon = document.getElementById("statusIcon");
-      const label = document.getElementById("statusLabel");
-      const sub = document.getElementById("statusSub");
-      label.style.color = "";
-      document.getElementById("statusHero").classList.remove("changed");
-
+      const icon = document.getElementById("statusIcon"), lbl = document.getElementById("statusLabel"), sub = document.getElementById("statusSub");
+      lbl.style.color = "";
       if (state === "running") {
-        icon.textContent = "🟢";
-        label.textContent = "Monitoring Active";
-        sub.textContent = `Watching ${document.getElementById("urlInput").value}`;
+        if (!document.getElementById("statusHero").classList.contains("changed")) {
+          icon.textContent = "🔍"; lbl.textContent = "Monitoring Active"; sub.textContent = "Watching jeemain.nta.nic.in for changes…";
+        }
       } else if (state === "stopped") {
-        icon.textContent = "⏸️";
-        label.textContent = "Stopped";
-        sub.textContent = "Press Start to begin monitoring";
+        document.getElementById("statusHero").classList.remove("changed");
+        icon.textContent = "⏸️"; lbl.textContent = "Stopped"; sub.textContent = "Press Start to begin monitoring";
       } else if (state === "error") {
-        icon.textContent = "⚠️";
-        label.textContent = "Error – Retrying…";
-        sub.textContent = "Check the log for details";
+        icon.textContent = "⚠️"; lbl.textContent = "Error – Retrying…"; sub.textContent = "Check the log for details";
       }
     }
 
-    function addLog(msg, type = "info") {
-      const wrap = document.getElementById("logWrap");
-      const now = new Date();
-      const time = now.toLocaleTimeString("en-GB", { hour12: false });
-      const entry = document.createElement("div");
-      entry.className = "log-entry";
-      entry.innerHTML = `<span class="log-time">${time}</span><span class="log-dot ${type}"></span><span class="log-msg">${msg}</span>`;
-      wrap.prepend(entry);
-
-      // Keep max 200 entries
+    function addLog(msg, type="info") {
+      const wrap = document.getElementById("logWrap"), now = new Date();
+      const t = now.toLocaleTimeString("en-GB",{hour12:false});
+      const el = document.createElement("div"); el.className = "log-entry";
+      el.innerHTML = `<span class="log-time">${t}</span><span class="log-dot ${type}"></span><span class="log-msg">${msg}</span>`;
+      wrap.prepend(el);
       while (wrap.children.length > 200) wrap.removeChild(wrap.lastChild);
     }
-
-    function clearLog() {
-      const wrap = document.getElementById("logWrap");
-      wrap.innerHTML = "";
-      addLog("Log cleared", "info");
-    }
-
+    function clearLog() { document.getElementById("logWrap").innerHTML = ""; addLog("Log cleared","info"); }
     function updateUptime() {
       if (!startTime) return;
-      const diff = Math.floor((Date.now() - startTime) / 1000);
-      const h = String(Math.floor(diff / 3600)).padStart(2, "0");
-      const m = String(Math.floor((diff % 3600) / 60)).padStart(2, "0");
-      const s = String(diff % 60).padStart(2, "0");
+      const d = Math.floor((Date.now()-startTime)/1000);
+      const h=String(Math.floor(d/3600)).padStart(2,"0"), m=String(Math.floor(d%3600/60)).padStart(2,"0"), s=String(d%60).padStart(2,"0");
       document.getElementById("statUptime").textContent = `${h}:${m}:${s}`;
     }
 
-    // ── Request notification permission on load ──
-    window.addEventListener("load", () => {
-      if ("Notification" in window && Notification.permission === "default") {
-        Notification.requestPermission();
-      }
-    });
-
-    // ── Warn before closing ──
-    window.addEventListener("beforeunload", (e) => {
-      if (monitoring) { e.preventDefault(); e.returnValue = ""; }
-    });
+    // Notification permission
+    window.addEventListener("load",()=>{ if("Notification"in window && Notification.permission==="default") Notification.requestPermission(); });
+    // Warn before close
+    window.addEventListener("beforeunload",e=>{ if(monitoring){e.preventDefault();e.returnValue="";} });
   </script>
 </body>
 </html>

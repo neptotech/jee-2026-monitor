@@ -1,53 +1,90 @@
 const fetch = require("node-fetch");
 const crypto = require("crypto");
 
-module.exports = async (req, res) => {
-  // CORS headers so any frontend can call this
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET");
+// ── Shared cache – persists across warm Vercel invocations ──
+// All users share this single cached result, so NTA gets hit only once per cycle
+const TARGET_URL = "https://jeemain.nta.nic.in/";
+const CACHE_TTL = 15_000; // Re-fetch from NTA at most once every 15 seconds
 
-  const url = req.query.url || "https://jeemain.nta.nic.in/";
+let cache = {
+  hash: null,
+  prevHash: null,
+  httpStatus: null,
+  contentLength: 0,
+  lastChecked: null,
+  changed: false,
+  changeDetectedAt: null,
+  error: null,
+  checkCount: 0,
+};
 
-  // Basic safety: only allow checking specific domains
-  const allowed = ["jeemain.nta.nic.in", "nta.ac.in", "ntaresults.nic.in", "nta.nic.in"];
-  try {
-    const hostname = new URL(url).hostname;
-    if (!allowed.some((d) => hostname === d || hostname.endsWith("." + d))) {
-      return res.status(403).json({ success: false, error: "Domain not allowed" });
-    }
-  } catch {
-    return res.status(400).json({ success: false, error: "Invalid URL" });
-  }
-
+async function fetchFromNTA() {
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15000);
 
-    const response = await fetch(url, {
+    const response = await fetch(TARGET_URL, {
       signal: controller.signal,
       headers: {
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        Accept:
+          "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Cache-Control": "no-cache",
+        Pragma: "no-cache",
       },
     });
     clearTimeout(timeout);
 
     const content = await response.text();
-    const hash = crypto.createHash("md5").update(content).digest("hex");
+    const newHash = crypto.createHash("md5").update(content).digest("hex");
 
-    res.json({
-      success: true,
-      hash,
-      status: response.status,
-      contentLength: content.length,
-      timestamp: new Date().toISOString(),
-    });
+    cache.checkCount++;
+    cache.httpStatus = response.status;
+    cache.contentLength = content.length;
+    cache.lastChecked = new Date().toISOString();
+    cache.error = null;
+
+    // Detect change (only after first baseline is set)
+    if (cache.hash && newHash !== cache.hash) {
+      cache.prevHash = cache.hash;
+      cache.changed = true;
+      cache.changeDetectedAt = cache.lastChecked;
+    }
+
+    cache.hash = newHash;
   } catch (err) {
-    res.status(500).json({
-      success: false,
-      error: err.message,
-      timestamp: new Date().toISOString(),
-    });
+    cache.error = err.message;
+    cache.lastChecked = new Date().toISOString();
   }
+}
+
+module.exports = async (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET");
+  res.setHeader("Cache-Control", "no-cache, no-store");
+
+  // Only re-fetch from NTA if cache is stale
+  const now = Date.now();
+  const lastTime = cache.lastChecked ? new Date(cache.lastChecked).getTime() : 0;
+
+  if (now - lastTime >= CACHE_TTL) {
+    await fetchFromNTA();
+  }
+
+  res.json({
+    success: !cache.error,
+    url: TARGET_URL,
+    hash: cache.hash,
+    prevHash: cache.prevHash,
+    httpStatus: cache.httpStatus,
+    contentLength: cache.contentLength,
+    lastChecked: cache.lastChecked,
+    changed: cache.changed,
+    changeDetectedAt: cache.changeDetectedAt,
+    serverChecks: cache.checkCount,
+    error: cache.error,
+    cacheTTL: CACHE_TTL,
+  });
 };
