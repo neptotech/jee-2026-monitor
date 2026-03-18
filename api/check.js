@@ -3,9 +3,9 @@ const crypto = require("crypto");
 const { notifyAll } = require("./notify.js");
 
 // ── Shared cache – persists across warm Vercel invocations ──
-// All users share this single cached result, so NTA gets hit only once per cycle
-const TARGET_URL = "https://jeemain.nta.nic.in/";
-const CACHE_TTL = 15_000; // Re-fetch from NTA at most once every 15 seconds
+// All users share this single cached result, so target gets hit only once per cycle
+const TARGET_URL = "https://stackoverflow.com/questions";
+const CACHE_TTL = 15_000; // Re-fetch at most once every 15 seconds
 
 let cache = {
   hash: null,
@@ -59,7 +59,7 @@ async function fetchFromNTA() {
       if (!cache.notificationSent) {
         cache.notificationSent = true;
         try {
-          const msg = "A new change occurred on JEE official site! This is from JEE Monitor via CallMeBot reaching you.";
+          const msg = "A new change occurred on StackOverflow! This is a test from the Monitor via CallMeBot reaching you.";
           const result = await notifyAll(msg);
           cache.notifiedCount = result.notified;
           console.log(`CallMeBot: notified ${result.notified}/${result.total} subscribers`);

@@ -911,21 +911,20 @@
 
   <div class="container">
     <header>
-      <div class="badge"><span class="dot"></span> Live Monitor</div>
-      <h1>JEE Main 2026</h1>
+      <div class="badge"><span class="dot"></span> Live Monitor (Test Mode)</div>
+      <h1>StackOverflow Monitor</h1>
       <p class="subtitle">Shared live monitor — one server check, instant alert for everyone.</p>
-      <div class="target-url">🌐 <a href="https://jeemain.nta.nic.in/" target="_blank">jeemain.nta.nic.in</a></div>
+      <div class="target-url">🌐 <a href="https://stackoverflow.com/questions" target="_blank">stackoverflow.com/questions</a></div>
     </header>
 
     <p class="note-text">📢 This tool monitors <strong>any content change</strong> on <a
-        href="https://jeemain.nta.nic.in/" target="_blank" style="color:var(--accent2)">jeemain.nta.nic.in</a> — not
-      just results, but <strong>any new update, notification, or announcement</strong> posted on the page.</p>
+        href="https://stackoverflow.com/questions" target="_blank" style="color:var(--accent2)">stackoverflow.com/questions</a> — it updates constantly, which is perfect for testing the CallMeBot integration!</p>
 
     <div class="motivation-banner">
       <span class="emoji">🎯</span>
-      <p><strong>Keep your focus on studies, not the refresh button.</strong><br>Leave this tab open in the
+      <p><strong>Testing Mode Active!</strong><br>Leave this tab open in the
         background.
-        We'll alert you with a loud sound the moment jeemain.nta.nic.in updates.</p>
+        We'll alert you with a loud sound the moment StackOverflow updates.</p>
     </div>
 
     <!-- Status -->
@@ -1350,11 +1349,11 @@
       document.getElementById("statusIcon").textContent = "🎉";
       document.getElementById("statusLabel").textContent = "CHANGE DETECTED!";
       document.getElementById("statusLabel").style.color = "var(--green)";
-      document.getElementById("statusSub").textContent = "The JEE Main website content has changed!";
+      document.getElementById("statusSub").textContent = "StackOverflow content has changed!";
       document.getElementById("changeOverlay").classList.add("show");
 
       if (Notification.permission === "granted") {
-        new Notification("🎯 JEE Main 2026 – CHANGE DETECTED!", { body: "jeemain.nta.nic.in has changed! Check now!" });
+        new Notification("🎯 StackOverflow – CHANGE DETECTED!", { body: "stackoverflow.com/questions has changed! Check now!" });
       }
     }
 
@@ -1365,7 +1364,7 @@
       lbl.style.color = "";
       if (state === "running") {
         if (!document.getElementById("statusHero").classList.contains("changed")) {
-          icon.textContent = "🔍"; lbl.textContent = "Monitoring Active"; sub.textContent = "Watching jeemain.nta.nic.in for changes…";
+          icon.textContent = "🔍"; lbl.textContent = "Monitoring Active"; sub.textContent = "Watching stackoverflow.com/questions for changes…";
         }
       } else if (state === "stopped") {
         document.getElementById("statusHero").classList.remove("changed");
