@@ -2,10 +2,18 @@
   "version": 2,
   "builds": [
     { "src": "api/check.js", "use": "@vercel/node" },
+    { "src": "api/subscribe.js", "use": "@vercel/node" },
+    { "src": "api/unsubscribe.js", "use": "@vercel/node" },
+    { "src": "api/subscribers.js", "use": "@vercel/node" },
+    { "src": "api/notify.js", "use": "@vercel/node" },
     { "src": "public/**", "use": "@vercel/static" }
   ],
   "routes": [
     { "src": "/api/check", "dest": "/api/check.js" },
+    { "src": "/api/subscribe", "dest": "/api/subscribe.js" },
+    { "src": "/api/unsubscribe", "dest": "/api/unsubscribe.js" },
+    { "src": "/api/subscribers", "dest": "/api/subscribers.js" },
+    { "src": "/api/notify", "dest": "/api/notify.js" },
     { "src": "/(.*)", "dest": "/public/$1" }
   ]
 }
