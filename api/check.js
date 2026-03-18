@@ -1,5 +1,6 @@
 const fetch = require("node-fetch");
 const crypto = require("crypto");
+const { notifyAll } = require("./notify.js");
 
 // ── Shared cache – persists across warm Vercel invocations ──
 // All users share this single cached result, so NTA gets hit only once per cycle
@@ -16,6 +17,8 @@ let cache = {
   changeDetectedAt: null,
   error: null,
   checkCount: 0,
+  notificationSent: false, // Prevent duplicate CallMeBot notifications
+  notifiedCount: 0,
 };
 
 async function fetchFromNTA() {
@@ -51,6 +54,19 @@ async function fetchFromNTA() {
       cache.prevHash = cache.hash;
       cache.changed = true;
       cache.changeDetectedAt = cache.lastChecked;
+
+      // ── Notify all CallMeBot subscribers (only once per change) ──
+      if (!cache.notificationSent) {
+        cache.notificationSent = true;
+        try {
+          const msg = "A new change occurred on JEE official site! This is from JEE Monitor via CallMeBot reaching you.";
+          const result = await notifyAll(msg);
+          cache.notifiedCount = result.notified;
+          console.log(`CallMeBot: notified ${result.notified}/${result.total} subscribers`);
+        } catch (notifyErr) {
+          console.error("CallMeBot notification error:", notifyErr.message);
+        }
+      }
     }
 
     cache.hash = newHash;
@@ -92,5 +108,6 @@ module.exports = async (req, res) => {
     serverChecks: cache.checkCount,
     error: cache.error,
     cacheTTL: CACHE_TTL,
+    notifiedCount: cache.notifiedCount,
   });
 };
