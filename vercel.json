@@ -15,5 +15,11 @@
     { "src": "/api/subscribers", "dest": "/api/subscribers.js" },
     { "src": "/api/notify", "dest": "/api/notify.js" },
     { "src": "/(.*)", "dest": "/public/$1" }
+  ],
+  "crons": [
+    {
+      "path": "/api/check",
+      "schedule": "* * * * *"
+    }
   ]
 }

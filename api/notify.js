@@ -8,10 +8,11 @@ function getRedis() {
       url: process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL,
       token: process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN,
     });
-    return redis;
   }
+  return redis;
+}
 
-  const CALLMEBOT_BASE = "http://api.callmebot.com/start.php";
+const CALLMEBOT_BASE = "http://api.callmebot.com/start.php";
   const BATCH_SIZE = 50;
   const BATCH_DELAY_MS = 200;
 
